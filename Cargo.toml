@@ -1,5 +1,6 @@
 [package]
 name = "scutil-parser"
+description = "Parser for the macOS scutil command"
 version = "0.1.0"
 edition = "2021"
 

@@ -4,6 +4,7 @@ use clap::{Parser, Subcommand};
 
 #[derive(Subcommand)]
 enum Commands {
+    /// Runs 'scutil --dns' and parses the output
     Dns,
 }
 

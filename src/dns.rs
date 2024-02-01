@@ -116,7 +116,7 @@ pub fn parse_text(input: &str) -> Result<DNSConfig, String> {
     let lines: Vec<String> = input.lines().map(|s| s.to_string()).collect();
 
     while line_index < lines.len() {
-        let line = match lines.get(line_index).clone() {
+        let line = match lines.get(line_index) {
             Some(line) => line,
             None => {
                 return Err(format!("Failed to get line index {}", line_index));
@@ -206,18 +206,14 @@ pub fn parse_text(input: &str) -> Result<DNSConfig, String> {
         } else if line.trim().starts_with("if_index") {
             current_resolver.if_index = Some(InterfaceIndex::from_str(line.trim())?);
         } else if line.trim().starts_with("flags") {
-            line.trim()
-                .split(':')
-                .last()
-                .and_then(|l| {
-                    l.split(',')
-                        .map(|s| ResolverFlags::from_str(s.trim()))
-                        .collect::<Result<Vec<ResolverFlags>, String>>()
-                        .ok()
-                })
-                .map(|flags| {
-                    current_resolver.flags = flags;
-                });
+            if let Some(flags) = line.trim().split(':').last().and_then(|l| {
+                l.split(',')
+                    .map(|s| ResolverFlags::from_str(s.trim()))
+                    .collect::<Result<Vec<ResolverFlags>, String>>()
+                    .ok()
+            }) {
+                current_resolver.flags = flags;
+            };
         } else if line.trim().starts_with("reach") {
             let reach = line.trim().split(':').last().unwrap().trim();
             #[cfg(test)]
