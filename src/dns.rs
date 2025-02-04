@@ -1,4 +1,3 @@
-use lazy_static::lazy_static;
 use regex::Regex;
 use serde::Serialize;
 
@@ -304,7 +303,7 @@ pub fn parse_text(input: &str) -> Result<DNSConfig, String> {
     Ok(dns_config)
 }
 
-lazy_static! {
-    static ref NAMESERVER_PARSER: Regex =
-        Regex::new(r"nameserver\[(?P<ns_id>\d+)\]\s+:\s+(?P<nameserver>\S+)").unwrap();
-}
+static NAMESERVER_PARSER: once_cell::sync::Lazy<Regex> = once_cell::sync::Lazy::new(|| {
+    Regex::new(r"nameserver\[(?P<ns_id>\d+)\]\s+:\s+(?P<nameserver>\S+)")
+        .expect("failed to generate retgex")
+});
