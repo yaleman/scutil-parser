@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::net::IpAddr;
 use std::str::FromStr;
+use std::sync::LazyLock;
 
 #[derive(Clone, Debug, Serialize)]
 pub enum ResolverFlags {
@@ -303,7 +304,7 @@ pub fn parse_text(input: &str) -> Result<DNSConfig, String> {
     Ok(dns_config)
 }
 
-static NAMESERVER_PARSER: once_cell::sync::Lazy<Regex> = once_cell::sync::Lazy::new(|| {
+static NAMESERVER_PARSER: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"nameserver\[(?P<ns_id>\d+)\]\s+:\s+(?P<nameserver>\S+)")
         .expect("failed to generate retgex")
 });
